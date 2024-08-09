@@ -3,7 +3,10 @@ import os
 import pandas as pd
 
 
-PATH_TO_FILE_EXCEL = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "transactions_excel.xlsx")
+PATH_TO_FILE_EXCEL = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "operations.xlsx")
+
+fileName = 'operations.xlsx'
+df = pd.read_excel("transactions_excel.xlsx")
 
 
 def get_transactions_dictionary_excel(excel_path: str) -> list[dict]:

@@ -1,5 +1,8 @@
-import datetime
 import os
+
+import pandas as pd
+import requests
+import datetime as dt
 
 from src.utils import get_transactions_dictionary_excel
 from dotenv import load_dotenv
@@ -8,35 +11,27 @@ load_dotenv()
 api_key = os.getenv("API_KEY")
 
 
-PATH_TO_FILE_EXCEL = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "transactions_excel.xlsx")
+PATH_TO_FILE_EXCEL = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "operations.xlsx")
+
+fileName = 'operations.xlsx'
+df = excel_data = pd.read_excel("transactions_excel.xlsx")
 
 
-def work_time():
-    date_string = datetime.datetime.now()
-    date_str = date_string.strftime('%H:%M')
-    date = datetime.datetime.today()
-    time_string = date.strftime('%H:%M')
-    new_time_morn = time_string + datetime.timedelta(hours=6, minutes=00)
-    new_time_day = time_string + datetime.timedelta(hours=12, minutes=00)
-    new_time_evening = time_string + datetime.timedelta(hours=18, minutes=00)
-    new_time_nights = time_string + datetime.timedelta(hours=24, minutes=00)
-
-    print(date_string)
-    if date_str < new_time_morn:
-        print("Доброе ночи")
-    elif new_time_morn < date_str < new_time_day:
-        print("Добрый  утро")
-    elif new_time_day < date_str < new_time_evening:
-        print("Добрый  день")
-    elif new_time_evening < date_str < new_time_nights:
-        print("Добрый  вечер")
+def greeting() -> str:
+    hour = dt.datetime.now().hour
+    if 6 <= hour < 12:
+        return "Доброе утро"
+    elif 12 <= hour < 18:
+        return "Добрый день"
+    elif 18 <= hour < 24:
+        return "Добрый вечер"
     else:
-        print("error")
+        return "Доброй ночи"
 
 
 def get_mask_card_number(card_number: str) -> str:
     """Функция маскировки номера карты."""
-    return f"{card_number[:4]} {card_number[4:8]} **** "
+    return f" **** **** {card_number[-4:]}"
 
 
 def total_amount_of_expenses() -> dict:
@@ -53,7 +48,7 @@ def total_amount_of_expenses() -> dict:
     return total
 
 
-def total_category(transactions: dict) -> dict:
+def total_category() -> dict:
     """Функция подсчета кешбэка."""
     cash = 0
     transactions = get_transactions_dictionary_excel(PATH_TO_FILE_EXCEL)
@@ -62,22 +57,34 @@ def total_category(transactions: dict) -> dict:
     return cash
 
 
+def sort_by_date(operations: list[dict], reverse: bool = True) -> list[dict]:
+    """
+    Функция принимает на вход список словарей и возвращает новый список, в котором исходные
+    словари отсортированы по убыванию даты
+    """
+    operations = sorted(operations, key=lambda new_list_of_dict: new_list_of_dict["date"], reverse=reverse)
+    return operations
+
+
 def top_five(total: dict) -> dict:
-    """Функция топа 5 расзодов"""
-    top = []
-    transactions =
-    # нужно достать из total_amount_of_expenses() total и отсортировать по убыванию
-    # после вывести первые 5
-    for i in
-        top.append(i)[:5]
-    return top
+    pass
 
 
-def shares_sp500():
-    """Функция подсчета Стоимость акций из S&P500."""
-    url = "https://query2.finance.yahoo.com/v8/finance/chart/%5EGSPC"
+def realttimecurrencyexchangerate() -> float:
+    base = ["USD", "EUR"]
+    url = f"https://api.apilayer.com/exchangerates_data/latest?symbols=symbols&base={base}"
+    payload = {}
     headers = {"apikey": api_key}
+    response = requests.request("GET", url, headers=headers, data = payload)
+    json_result = response.json()
+    currency_amount = json_result["result"]
+    return currency_amount
 
 
 if __name__ == "__main__":
-    work_time()
+    greeting()
+    get_mask_card_number()
+    total_amount_of_expenses()
+    total_category()
+    sort_by_date()
+    realttimecurrencyexchangerate()
