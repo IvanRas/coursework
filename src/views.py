@@ -17,6 +17,11 @@ fileName = 'operations.xlsx'
 df = excel_data = pd.read_excel("transactions_excel.xlsx")
 
 
+def month_transaction():
+    month_day = dt.datetime.now().day
+    last_date = month_day
+
+
 def greeting() -> str:
     hour = dt.datetime.now().hour
     if 6 <= hour < 12:
@@ -31,10 +36,10 @@ def greeting() -> str:
 
 def get_mask_card_number(card_number: str) -> str:
     """Функция маскировки номера карты."""
-    return f" **** **** {card_number[-4:]}"
+    return f"{card_number[-4:]}"
 
 
-def total_amount_of_expenses() -> dict:
+def total_amount_of_expenses(transaction_list: list[dict]) -> float:
     """Функция подсчета общих расходов."""
     # из столбца operation_amount/Сумма операции взять те что идут с минусом и составить
     # новый список включающий только расзоды
@@ -48,7 +53,7 @@ def total_amount_of_expenses() -> dict:
     return total
 
 
-def total_category() -> dict:
+def total_category(transaction_list: list[dict]) -> float:
     """Функция подсчета кешбэка."""
     cash = 0
     transactions = get_transactions_dictionary_excel(PATH_TO_FILE_EXCEL)
@@ -57,25 +62,31 @@ def total_category() -> dict:
     return cash
 
 
-def sort_by_date(operations: list[dict], reverse: bool = True) -> list[dict]:
-    """
-    Функция принимает на вход список словарей и возвращает новый список, в котором исходные
-    словари отсортированы по убыванию даты
-    """
-    operations = sorted(operations, key=lambda new_list_of_dict: new_list_of_dict["date"], reverse=reverse)
-    return operations
+# def sort_by_date(operations: list[dict], reverse: bool = True) -> list[dict]:
+#     """
+#     Функция принимает на вход список словарей и возвращает новый список, в котором исходные
+#     словари отсортированы по убыванию даты
+#     """
+#     operations = sorted(operations, key=lambda new_list_of_dict: new_list_of_dict["date"], reverse=reverse)
+#     return operations
+#
 
-
-def top_five(total: dict) -> dict:
-    pass
+def top_five(transaction_list: list[dict]) -> dict:
+    top_transaction_list = []
+    transactions = get_transactions_dictionary_excel(PATH_TO_FILE_EXCEL)
+    for i in transactions["operation_amount"]:
+        if i < 0:
+            top_transaction_list.append(i)
+            top_transaction_list.sort()
+        return top_transaction_list.index[:5]
 
 
 def realttimecurrencyexchangerate() -> float:
     base = ["USD", "EUR"]
-    url = f"https://api.apilayer.com/exchangerates_data/latest?symbols=symbols&base={base}"
+    url = f"https://api.apilayer.com/exchangerates_data/latest?symbols=rubs&base={base}"
     payload = {}
     headers = {"apikey": api_key}
-    response = requests.request("GET", url, headers=headers, data = payload)
+    response = requests.request("GET", url, headers=headers, data=payload)
     json_result = response.json()
     currency_amount = json_result["result"]
     return currency_amount
@@ -86,5 +97,4 @@ if __name__ == "__main__":
     get_mask_card_number()
     total_amount_of_expenses()
     total_category()
-    sort_by_date()
     realttimecurrencyexchangerate()

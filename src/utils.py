@@ -2,7 +2,6 @@ import os
 
 import pandas as pd
 
-
 PATH_TO_FILE_EXCEL = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "operations.xlsx")
 
 fileName = 'operations.xlsx'
@@ -27,13 +26,9 @@ def get_transactions_dictionary_excel(excel_path: str) -> list[dict]:
                         "cashback": excel_data["Кэшбэк"][i],
                         "payment_amount": excel_data["Сумма платежа"][i],
                         "category": excel_data["Категория"][i],
-                        "operationAmount": {
-                            "operation_amount": str(excel_data["Сумма операции"][i]),
-                            "currency": {
-                                "name": excel_data["Валюта операции"][i],
-                                "code": excel_data["Валюта платежа"][i],
-                            },
-                        },
+                        "operation_amount": str(excel_data["Сумма операции"][i]),
+                        "name": excel_data["Валюта операции"][i],
+                        "code": excel_data["Валюта платежа"][i],
                         "description": excel_data["Описание"][i],
                         "mcc": excel_data["MCC"][i],
                         "bonuses": excel_data["Бонусы (включая кэшбэк)"][i],

@@ -13,7 +13,7 @@ df = pd.read_excel("transactions_excel.xlsx")
 
 
 def filter_by_name() -> dict:
-    """функция по оиск переводов физическим лицам"""
+    """функция по переводовe физическим лицам"""
     name = input("Введите имя: ")
     found_operations = []
     transactions = get_transactions_dictionary_excel(PATH_TO_FILE_EXCEL)
