@@ -104,6 +104,7 @@ def fetch_exchange_rates() -> list[dict[str, float]] | None:
     logger.info("Функция успешно завершила свою работу.")
     return data_list
 
+
 def fetch_stock_prices() -> list[dict[str, float]] | None:
     """Функция  возвращает курс акций, указанных в файле user_setting.json"""
     logger.info("Функция начала свою работу.")
