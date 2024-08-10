@@ -104,6 +104,54 @@ def fetch_exchange_rates() -> list[dict[str, float]] | None:
     logger.info("Функция успешно завершила свою работу.")
     return data_list
 
+def fetch_stock_prices() -> list[dict[str, float]] | None:
+    """Функция  возвращает курс акций, указанных в файле user_setting.json"""
+    logger.info("Функция начала свою работу.")
+    os.chdir("..")
+    try:
+        with open(os.path.join(os.getcwd(), "user_setting.json"), "r", encoding="utf-8") as file:
+            data = json.load(file)
+    except (json.JSONDecodeError, FileNotFoundError):
+        logger.warning("Ошибка чтения json-файла")
+        return None
+
+    load_dotenv(".env")
+    api_key = os.getenv("API_KEY_STOCK_PRICE")
+    data_list = []
+
+    try:
+        for stock in data.get("user_stocks"):
+            url = f"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={stock}&apikey={api_key}"
+            response = requests.get(url)
+            resp_data = response.json()
+            data_list.append({stock: float(resp_data.get("Global Quote").get("05. price"))})
+    except requests.exceptions.RequestException:
+        logger.warning("Ошибка API запроса")
+        return None
+    logger.info("Функция успешно завершила свою работу.")
+    return data_list
+
+
+def filter_transactions_by_card(df_transactions: pd.DataFrame) -> list[dict]:
+    """Функция принимает DataFrame с транзакциями
+    и возврщает общую информацию по каждой карте"""
+    logger.info("Функция начала свою работу.")
+    cards_dict = (
+        df_transactions.loc[df_transactions["Сумма платежа"] < 0]
+        .groupby(by="Номер карты")
+        .agg("Сумма платежа")
+        .sum()
+        .to_dict()
+    )
+    logger.info("Функция обрабатывает данные транзакций.")
+    expenses_cards = []
+    for card, expenses in cards_dict.items():
+        expenses_cards.append(
+            {"last_digits": card[-4:], "total_spent": abs(expenses), "cashback": abs(round(expenses / 100, 2))}
+        )
+    logger.info("Функция успешно завершила свою работу.")
+    return expenses_cards
+
 
 def filter_transactions_by_date(
     transactions: pd.DataFrame, end_date: Optional[str | pd.DataFrame] = None
