@@ -34,6 +34,18 @@ def greeting() -> str:
         return "Доброй ночи"
 
 
+def get_cart_transactions() -> list:
+    """Функция вывода даных по одной карте."""
+    cart_transactions = []
+    transactions = get_transactions_dictionary_excel(PATH_TO_FILE_EXCEL)
+    for i in transactions["card_number"]:
+        if i in cart_transactions:
+            continue
+        else:
+            cart_transactions.append(i)
+    return cart_transactions
+
+
 def get_mask_card_number(card_number: str) -> str:
     """Функция маскировки номера карты."""
     return f"{card_number[-4:]}"
@@ -61,15 +73,6 @@ def total_category(transaction_list: list[dict]) -> float:
         cash += i
     return cash
 
-
-# def sort_by_date(operations: list[dict], reverse: bool = True) -> list[dict]:
-#     """
-#     Функция принимает на вход список словарей и возвращает новый список, в котором исходные
-#     словари отсортированы по убыванию даты
-#     """
-#     operations = sorted(operations, key=lambda new_list_of_dict: new_list_of_dict["date"], reverse=reverse)
-#     return operations
-#
 
 def top_five(transaction_list: list[dict]) -> dict:
     top_transaction_list = []

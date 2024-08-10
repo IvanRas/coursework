@@ -40,5 +40,12 @@ def realttimecurrencyexchangerate():
     return currency_amount
 
 
+def time_ob():
+    year, month, day = int(input("ведите год ")), int(input("ведите месяц ")), int(input("ведите день "))
+    date_obj = dt.datetime(f"{year}, {month}, {day}")
+    date_string = date_obj.strftime("%d-%m-%Y")
+    return date_string
+
+
 if __name__ == "__main__":
     realttimecurrencyexchangerate()

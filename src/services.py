@@ -1,23 +1,20 @@
-import os
+# -*- coding: utf-8 -*-
+import json
 import re
 
 import pandas as pd
 
-from src.utils import get_transactions_dictionary_excel
+from src.logger import setting_logger
+
+logger = setting_logger("services")
 
 
-PATH_TO_FILE_EXCEL = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "operations.xlsx")
-
-fileName = 'operations.xlsx'
-df = pd.read_excel("transactions_excel.xlsx")
-
-
-def filter_by_name() -> dict:
-    """функция по переводовe физическим лицам"""
-    name = input("Введите имя: ")
-    found_operations = []
-    transactions = get_transactions_dictionary_excel(PATH_TO_FILE_EXCEL)
-    for operation in transactions:
-        if re.search(name, operation.get("description", "")):
-            found_operations.append(operation)
-        return found_operations
+def transfers_to_individuals(transactions: pd.DataFrame) -> str:
+    """Функция возвращает JSON с транзакциями переводов физлицам."""
+    logger.info("Функция начала свою работу.")
+    transactions_dict = transactions.to_dict("records")
+    filtered_transactions = list(filter(lambda x: x["Категория"] == "Переводы", transactions_dict))
+    transfers = list(filter(lambda x: re.findall(r"\w+\s\w\.", x["Описание"]), filtered_transactions))
+    json_data = json.dumps(transfers, ensure_ascii=False, indent=4)
+    logger.info("Функция успешно завершила свою работу.")
+    return json_data
