@@ -171,3 +171,16 @@ def filter_transactions_by_date(
     filtered_transactions["Дата операции"] = filtered_transactions["Дата операции"].dt.strftime("%d.%m.%Y %H:%M:%S")
     logger.info("Функция успешно завершила свою работу.")
     return filtered_transactions
+
+
+# def filter_transactions_by_date(
+#         transactions: pd.DataFrame, end_date: str | None = None
+# ) -> pd.DataFrame:
+#     """Функция, фильтрации транзакций по дате.Формат даты: %d.%m.%Y %H:%M:%S"""
+#     if end_date is None:
+#         end_date = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
+#     start_date = datetime.strptime(end_date, "%d.%m.%Y %H:%M:%S").replace(day=1)
+#     end_date = datetime.strptime(end_date, "%d.%m.%Y %H:%M:%S")
+#     transactions_col = pd.to_datetime(transactions.loc[:, "Дата операции"], format="%d.%m.%Y %H:%M:%S")
+#     filtered_transactions = transactions[(transactions_col >= start_date) & (transactions_col <= end_date)]
+#     return filtered_transactions

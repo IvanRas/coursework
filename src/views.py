@@ -5,14 +5,8 @@ import json
 import pandas as pd
 
 from src.logger import setting_logger
-from src.utils import (
-    fetch_exchange_rates,
-    fetch_stock_prices,
-    filter_transactions_by_card,
-    filter_transactions_by_date,
-    get_top_five_transactions,
-    greeting,
-)
+from src.utils import (fetch_exchange_rates, fetch_stock_prices, filter_transactions_by_card,
+                       filter_transactions_by_date, get_top_five_transactions, greeting)
 
 logger = setting_logger("views")
 

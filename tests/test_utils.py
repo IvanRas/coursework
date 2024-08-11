@@ -130,7 +130,6 @@ class TestFetchStockPrices(unittest.TestCase):
 # Тест функции filter_transactions_by_card
 def test_filter_transactions_by_card(sample_transactions: pd.DataFrame) -> None:
     result = filter_transactions_by_card(sample_transactions)
-
     expected_result = [
         {"last_digits": "5678", "total_spent": 3000, "cashback": 30.0},
         {"last_digits": "4321", "total_spent": 1500, "cashback": 15.0},
