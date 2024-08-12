@@ -3,6 +3,7 @@ import unittest
 from unittest.mock import MagicMock, mock_open, patch
 
 import pandas as pd
+import pytest
 from freezegun import freeze_time
 
 from src.utils import (fetch_exchange_rates, fetch_stock_prices, filter_transactions_by_card,
@@ -128,6 +129,7 @@ class TestFetchStockPrices(unittest.TestCase):
 
 
 # Тест функции filter_transactions_by_card
+@pytest.fixture
 def test_filter_transactions_by_card(sample_transactions: pd.DataFrame) -> None:
     result = filter_transactions_by_card(sample_transactions)
     expected_result = [
@@ -138,12 +140,14 @@ def test_filter_transactions_by_card(sample_transactions: pd.DataFrame) -> None:
 
 
 # Тест функции filter_transactions_by_date
+@pytest.fixture
 def test_filter_transactions_by_date(transactions_list: pd.DataFrame) -> None:
     result = filter_transactions_by_date(transactions_list, "30.11.2023 23:00:00").to_dict()
     expected = {"Дата операции": {2: "21.11.2023 10:00:00"}, "Сумма": {2: 300}, "Описание": {2: "Транзакция 3"}}
     assert result == expected
 
 
+@pytest.fixture
 def test_filter_transactions_by_date_no_date(transactions_list: pd.DataFrame) -> None:
     result = filter_transactions_by_date(transactions_list).to_dict()
     print(result)

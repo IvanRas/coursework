@@ -77,9 +77,8 @@ def get_top_five_transactions(transactions: pd.DataFrame) -> list[dict] | None:
 def fetch_exchange_rates() -> list[dict[str, float]] | None:
     """Функция возвращает курс валют в рублях,указанных в файле user_setting.json"""
     logger.info("Функция начала свою работу.")
-    os.chdir("..")
     try:
-        with open(os.path.join(os.getcwd(), "user_setting.json"), "r", encoding="utf-8") as file:
+        with open(os.path.join(os.getcwd(), "user_settings.json"), "r", encoding="utf-8") as file:
             data = json.load(file)
     except (json.JSONDecodeError, FileNotFoundError):
         logger.warning("Ошибка чтения json-файла")
@@ -108,9 +107,8 @@ def fetch_exchange_rates() -> list[dict[str, float]] | None:
 def fetch_stock_prices() -> list[dict[str, float]] | None:
     """Функция  возвращает курс акций, указанных в файле user_setting.json"""
     logger.info("Функция начала свою работу.")
-    os.chdir("..")
     try:
-        with open(os.path.join(os.getcwd(), "user_setting.json"), "r", encoding="utf-8") as file:
+        with open(os.path.join(os.getcwd(), "user_settings.json"), "r", encoding="utf-8") as file:
             data = json.load(file)
     except (json.JSONDecodeError, FileNotFoundError):
         logger.warning("Ошибка чтения json-файла")
