@@ -46,5 +46,5 @@ def spending_by_category(transactions: pd.DataFrame, category: str, date: Option
         "%d.%m.%Y %H:%M:%S"
     )
     sorted_transactions_by_category = sorted_transactions_by_date[sorted_transactions_by_date["Категория"] == category]
-
+    print(sorted_transactions_by_category)
     return sorted_transactions_by_category
